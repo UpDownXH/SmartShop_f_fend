@@ -81,7 +81,8 @@ export default {
         const loginForm = ref(null)
         const state = reactive({
             which: true,
-            checkedRegister: false,
+            checked: true,
+            checkedRegister: true,
             ruleForm: {
                 username: '',
                 password: ''
@@ -113,7 +114,6 @@ export default {
                     error_image_code: '',
                 },
             },
-            checked: true,
             rules: {
                 username: [
                     { required: 'true', message: '账户不能为空', trigger: 'blur' }
@@ -237,17 +237,23 @@ export default {
         const submitForm = async () => {
             loginForm.value.validate((valid) => {
                 if (valid) {
-                    axios.post('/authorizations/', {
+                    axios.post('/login/', {
                         username: state.ruleForm.username || '',
-                        password: state.ruleForm.password
+                        password: state.ruleForm.password,
+                        remembered: state.checkedRegister
+                    }, {
+                        responseType: 'json',
+                        // 发送请求的时候, 携带上cookie
+                        withCredentials: true,
+                        // crossDomain: true
                     }).then(res => {
                         ElMessage({
                             message: '恭喜，成功登录',
                             type: 'success'
                         })
-                        localSet('user_id', res.data.id)
-                        localSet('username', res.data.username)
-                        localSet('token', res.data.token)
+                        // localSet('user_id', res.data.id)
+                        // localSet('username', res.data.username)
+                        // localSet('token', res.data.token)
                         window.location.href = '/'
                         console.log(res);
                     }).catch(error => {
@@ -365,7 +371,7 @@ export default {
                             type: 'info'
                         })
                         state.which = true
-                        
+
                     } else if (res.data.code == 400) {
                         ElMessage({
                             message: res.data.errmsg,
@@ -387,7 +393,7 @@ export default {
 
         }
         //返回登录
-        const returnLogin = ()=>{
+        const returnLogin = () => {
             state.which = true
         }
         return {
