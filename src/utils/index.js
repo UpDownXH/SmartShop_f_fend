@@ -1,10 +1,6 @@
 export function localGet(key) {
-  const value = window.localStorage.getItem(key)
-  try {
-    return JSON.parse(window.localStorage.getItem(key))
-  } catch (error) {
-    return value
-  }
+   var r = document.cookie.match("\\b" + key + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
 }
 
 export function localSet(key, value) {
@@ -12,7 +8,7 @@ export function localSet(key, value) {
 }
 
 export function localRemove(key) {
-  window.localStorage.removeItem(key)
+  // window.localStorage.removeItem(key)
 }
 
 export const pathMap = {

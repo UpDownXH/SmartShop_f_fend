@@ -39,20 +39,31 @@
                     <el-input type="password" v-model.trim="ruleFormRegister.password" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="password2">
-                    <el-input type="text" v-model.trim="ruleFormRegister.password2" autocomplete="off"></el-input>
+                    <el-input type="password" v-model.trim="ruleFormRegister.password2" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号" prop="mobile">
                     <el-input type="text" v-model.trim="ruleFormRegister.mobile" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="图形验证码" prop="image_code">
                     <el-input type="text" v-model.trim="ruleFormRegister.image_code" autocomplete="off"></el-input>
-                    <img src="" alt="">
+                    <img :src="ruleFormRegister.image_code_url" alt="" @click="changeImageCode" class="more">
                 </el-form-item>
                 <el-form-item label="短信验证码" prop="sms_code">
-                    <el-input type="text" v-model.trim="ruleFormRegister.sms_code" autocomplete="off"></el-input>
+                    <el-input type="text" v-model.trim="ruleFormRegister.sms_code" autocomplete="off">
+                        <template #append>
+                            <el-button type="info" @click="sendSmsCode" :disabled="ruleFormRegister.sendingFlag">
+                                {{ ruleFormRegister.smsInfo }}</el-button>
+                        </template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-checkbox v-model="checkedRegister" @change="!checkedRegister">同意《智购商城使用协议》</el-checkbox>
+                </el-form-item>
+                <el-form-item>
+                    <el-button class="button-login" type="success" @click="sendRegister">立即注册</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button class="button-login" type="info" @click="returnLogin">返回登录</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -63,12 +74,14 @@
 import { reactive, ref, toRefs } from '@vue/reactivity'
 import axios from '@/utils/axios'
 import { localSet, localGet } from '@/utils'
+import { onMounted } from '@vue/runtime-core'
 export default {
     name: 'Login',
     setup() {
         const loginForm = ref(null)
         const state = reactive({
-            which: false,
+            which: true,
+            checkedRegister: false,
             ruleForm: {
                 username: '',
                 password: ''
@@ -80,7 +93,13 @@ export default {
                 mobile: '',
                 image_code: '',
                 sms_code: '',
-                allow: '',
+                allow: false,
+                error_image_code_message: '',
+                // 图形验证码:
+                image_code_id: '',
+                image_code_url: '',
+                smsInfo: '获取短信验证码',
+                sendingFlag: false,
                 error: {
                     error_name: false,
                     error_password: false,
@@ -92,7 +111,7 @@ export default {
                     error_phone_message: '',
                     error_sms_code_message: '',
                     error_image_code: '',
-                }
+                },
             },
             checked: true,
             rules: {
@@ -107,6 +126,11 @@ export default {
                 username: [
                     { required: 'true', message: '账户不能为空', trigger: 'blur' },
                     {
+                        pattern: /^\w{5,20}$/,
+                        message: '用户名是5到20位数字、字母或下划线',
+                        trigger: 'blur'
+                    },
+                    {
                         validator: (rule, value, callback) => {
                             var response = {}
                             axios.get('/usernames/' + value + '/count/').then(res => {
@@ -114,8 +138,10 @@ export default {
                                 response = res.data
                                 if (response.count == 1) {
                                     console.log(111);
+                                    state.ruleFormRegister.error.error_name = false
                                     callback(new Error('用户名重复'));
                                 } else {
+                                    state.ruleFormRegister.error.error_name = true
                                     callback();
                                 }
                             })
@@ -123,8 +149,85 @@ export default {
                     }
                 ],
                 password: [
-                    { required: 'true', message: '密码不能为空', trigger: 'blur' }
-                ]
+                    { required: 'true', message: '密码不能为空', trigger: 'blur' },
+                    {
+                        pattern: /^\w{8,20}$/,
+                        message: '密码是8到20位数字、字母或下划线',
+                        trigger: 'blur'
+                    },
+                    {
+                        validator: (rule, value, callback) => {
+                            console.log(value);
+                            if (value == '') {
+                                state.ruleFormRegister.error.error_password = false
+                                callback();
+                            } else {
+                                state.ruleFormRegister.error.error_password = true
+                                callback();
+                            }
+                        }, trigger: 'blur'
+                    }
+                ],
+                password2: [
+                    {
+                        validator: (rule, value, callback) => {
+                            console.log(value);
+                            if (value === '') {
+                                state.ruleFormRegister.error.error_check_password = false
+                                callback(new Error('请再次输入密码'));
+                            } else if (value !== state.ruleFormRegister.password) {
+                                state.ruleFormRegister.error.error_check_password = false
+                                callback(new Error('两次输入密码不一致!'));
+                            } else {
+                                state.ruleFormRegister.error.error_check_password = true
+                                callback();
+                            }
+                        }, trigger: 'blur'
+                    }
+                ],
+                mobile: [
+                    { required: 'true', message: '手机号不能为空', trigger: 'blur' },
+                    {
+                        pattern: /^1[34578]\d{9}$/,
+                        message: '手机格式不正确',
+                        trigger: 'blur'
+                    },
+                    {
+                        validator: (rule, value, callback) => {
+                            var response = {}
+                            axios.get('/mobiles/' + value + '/count/').then(res => {
+                                // console.log(res);
+                                response = res.data
+                                if (response.count == 1) {
+                                    // console.log(111);
+                                    state.ruleFormRegister.error.error_phone = false
+                                    callback(new Error('手机号已注册'));
+                                } else {
+                                    state.ruleFormRegister.error.error_phone = true
+                                    callback();
+                                }
+                            })
+                        }, trigger: 'blur'
+                    }
+                ],
+                image_code: [
+                    { required: 'true', message: '验证码不能为空', trigger: 'blur' },
+                ],
+                sms_code: [
+                    { required: 'true', message: '短信验证码不能为空', trigger: 'blur' },
+                    {
+                        validator: (rule, value, callback) => {
+                            console.log(value);
+                            if (value == '') {
+                                state.ruleFormRegister.error.error_sms_code = false
+                                callback();
+                            } else {
+                                state.ruleFormRegister.error.error_sms_code = true
+                                callback();
+                            }
+                        }, trigger: 'blur'
+                    }
+                ],
             },
         })
         const register = () => {
@@ -167,43 +270,136 @@ export default {
             loginForm.value.resetFields();
         }
 
-        //注册各方法
-        // 弃用，使用规则进行判断
-        // const checkUserName = (username) => {
-        //     // console.log(username);
-        //     // axios.get('/usernames/' + username + '/count/').then(res => {
-        //     //     console.log(res);
-        //     // })
-        //     var re = /^[a-zA-Z0-9_-]{5,20}$/;
-        //     var re2 = /^[0-9]+$/;
-        //     if (re.test(username) && !re2.test(username)) {
-        //         state.ruleFormRegister.error.error_name = false;
-        //     } else {
-        //         state.ruleFormRegister.error.error_name_message = '请输入5-20个字符的用户名且不能为纯数字';
-        //         state.ruleFormRegister.error.error_name = true;
-        //     }
-        //     // 检查重名
-        //     if (state.ruleFormRegister.error.error_name == false) {
-        //         axios.get('/usernames/' + username + '/count/').then(response => {
-        //             console.log(response)
-        //             console.log(response.data)
-        //             if (response.data.count > 0) {
-        //                 state.ruleFormRegister.error.error_name_message = '用户名已存在';
-        //                 state.ruleFormRegister.error.error_name = true;
-        //             } else {
-        //                 state.ruleFormRegister.error.error_name = false;
-        //             }
-        //         }).catch(error => {
-        //             console.log(error.response);
-        //         })
-        //     }
-        // }
+        // 生成一个图片验证码的编号，并设置页面中图片验证码img标签的src属性
+        const generate_image_code = () => {
+            // 生成uuid
+            var generateUUID = () => {
+                var d = new Date().getTime();
+                if (window.performance && typeof window.performance.now === "function") {
+                    d += performance.now(); //use high-precision timer if available
+                }
+                var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                    var r = (d + Math.random() * 16) % 16 | 0;
+                    d = Math.floor(d / 16);
+                    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+                });
+                return uuid;
+            }
+            state.ruleFormRegister.image_code_id = generateUUID();
+            var response = {}
+            axios.get('/image_codes/' + state.ruleFormRegister.image_code_id + '/').then(res => {
+                state.ruleFormRegister.image_code_url = 'http://192.168.178.137:8000/image_codes/' + state.ruleFormRegister.image_code_id + '/'
+            })
+        }
+        //onMounted
+        onMounted(() => {
+            generate_image_code()
+        })
+        //改变图片验证码
+        const changeImageCode = () => {
+            generate_image_code()
+        }
+
+        //获取短信验证码
+        const sendSmsCode = () => {
+            axios.get('/sms_codes/' + state.ruleFormRegister.mobile + '/' + '?image_code=' + state.ruleFormRegister.image_code
+                + '&image_code_id=' + state.ruleFormRegister.image_code_id).then(res => {
+                    state.ruleFormRegister.image_code_url = 'http://192.168.178.137:8000/image_codes/' + state.ruleFormRegister.image_code_id + '/'
+                    if (res.data.code == 0) {
+                        // 表示后端发送短信成功
+                        // 倒计时60秒，60秒后允许用户再次点击发送短信验证码的按钮
+                        console.log('发送短信成功');
+                        var num = 60;
+                        // 设置一个计时器
+                        var t = setInterval(() => {
+                            console.log('定时器');
+                            if (num == 1) {
+                                // 如果计时器到最后, 清除计时器对象
+                                clearInterval(t);
+                                // 将点击获取验证码的按钮展示的文本回复成原始文本
+                                state.ruleFormRegister.smsInfo = '获取短信验证码';
+                                // 将点击按钮的onclick事件函数恢复回去
+                                state.ruleFormRegister.sendingFlag = false;
+                            } else {
+                                num -= 1;
+                                // 展示倒计时信息
+                                state.ruleFormRegister.smsInfo = num + '秒';
+                            }
+                        }, 1000, 60)
+                    } else {
+                        ElMessage({
+                            message: res.data.errmsg,
+                            type: 'info'
+                        })
+                    }
+                })
+        }
+        //发送注册信息
+        const sendRegister = () => {
+            if (state.ruleFormRegister.error.error_name == true
+                && state.ruleFormRegister.error.error_password == true
+                && state.ruleFormRegister.error.error_check_password == true
+                && state.ruleFormRegister.error.error_phone == true
+                && state.ruleFormRegister.error.error_sms_code == true
+                && state.checkedRegister == true) {
+                console.log(11);
+                axios.post('/register/', {
+                    username: state.ruleFormRegister.username,
+                    password: state.ruleFormRegister.password,
+                    password2: state.ruleFormRegister.password2,
+                    mobile: state.ruleFormRegister.mobile,
+                    sms_code: state.ruleFormRegister.sms_code,
+                    allow: state.checkedRegister
+                }).then(res => {
+                    // console.log("lol");
+                    // console.log(res);
+                    // console.log(res.data);
+                    // console.log(res.data.code);
+                    // router.push({ path: '/index' })
+                    // console.log("为什么啊");
+                    if (res.data.code == "0") {
+                        console.log("内部");
+                        // router.push({ path: '/login' })
+                        ElMessage({
+                            message: '注册成功',
+                            type: 'info'
+                        })
+                        state.which = true
+                        
+                    } else if (res.data.code == 400) {
+                        ElMessage({
+                            message: res.data.errmsg,
+                            type: 'info'
+                        })
+                    }
+                }).catch(error => {
+                    ElMessage({
+                        message: "oops,出错了",
+                        type: 'info'
+                    })
+                })
+            } else {
+                ElMessage({
+                    message: '请完整填写表单',
+                    type: 'info'
+                })
+            }
+
+        }
+        //返回登录
+        const returnLogin = ()=>{
+            state.which = true
+        }
         return {
             ...toRefs(state),
             loginForm,
             submitForm,
             resetForm,
             register,
+            changeImageCode,
+            sendSmsCode,
+            sendRegister,
+            returnLogin
             // checkUserName
         }
     }
@@ -286,5 +482,9 @@ export default {
     line-height: 30px;
     margin-left: 87px;
     color: #e62e2e;
+}
+
+.more {
+    width: 120px;
 }
 </style>

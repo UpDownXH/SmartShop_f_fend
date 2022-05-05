@@ -57,7 +57,7 @@ export default {
     //退出登录
     const logout = () => {
       //退出之后，将本地保存的token清理掉
-      localRemove('token')
+      // localRemove('token')
       //回到登录页
       router.push({ path: '/login' })
       // axios.delete('/logout').then(() => {
