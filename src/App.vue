@@ -6,7 +6,7 @@
         <div class="head">
           <div>
             <img src="@/assets/logo.png" alt="logo">
-            <span>智购-后台</span>
+            <span>智购商城</span>
           </div>
         </div>
         <!-- 分割线 -->
@@ -18,7 +18,7 @@
             <!-- 子菜单标题 -->
             <template #title>
               <span>
-                Dashboard
+                商城
               </span>
             </template>
             <!-- menu子子菜单 -->
@@ -27,49 +27,75 @@
               <el-menu-item index="/intruduce">
                 <el-icon>
                   <home-filled />
-                </el-icon>系统介绍
+                </el-icon>商城介绍
               </el-menu-item>
               <el-menu-item index="/">
                 <el-icon>
                   <home-filled />
-                </el-icon>首页
+                </el-icon>商城主页
               </el-menu-item>
-              <el-menu-item index="/add">
+              <el-menu-item>
                 <el-icon>
                   <home-filled />
-                </el-icon>demo
+                </el-icon>搜索列表
+              </el-menu-item>
+              <el-menu-item>
+                <el-icon>
+                  <home-filled />
+                </el-icon>商品详细信息
               </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
               <span>
-                商品管理
+                我的购物车
               </span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/sku">SKU管理</el-menu-item>
-              <el-menu-item index="/pictures">图片管理</el-menu-item>
+              <el-menu-item>
+                <el-icon>
+                  <home-filled />
+                </el-icon>购物车商品
+              </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="3">
             <template #title>
               <span>
-                订单管理
+                我的订单
               </span>
             </template>
+            <el-menu-item-group>
+              <el-menu-item>
+                <el-icon>
+                  <home-filled />
+                </el-icon>订单
+              </el-menu-item>
+              <el-menu-item>
+                <el-icon>
+                  <home-filled />
+                </el-icon>支付
+              </el-menu-item>
+            </el-menu-item-group>
           </el-sub-menu>
           <el-sub-menu index="4">
             <template #title>
               <span>
-                用户管理
+                个人中心
               </span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/user">所有用户管理</el-menu-item>
-              <el-menu-item index="/author">权限管理</el-menu-item>
-              <el-menu-item index="/group">用户组管理</el-menu-item>
-              <el-menu-item index="/admin">管理员管理</el-menu-item>
+              <el-menu-item>
+                <el-icon>
+                  <home-filled />
+                </el-icon>邮件验证
+              </el-menu-item>
+              <el-menu-item>
+                <el-icon>
+                  <home-filled />
+                </el-icon>所获地址
+              </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>
         </el-menu>

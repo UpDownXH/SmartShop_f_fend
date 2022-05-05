@@ -3,7 +3,8 @@
   <div class="footer">
     <div class="left">Copyright © 2022 UpDown. All rights reserved.</div>
     <div class="right">
-      <a target="_blank" href="https://github.com/newbee-ltd/vue3-admin">smartshop-admin version:1.0</a>
+      欢迎来到智购商城
+      <!-- <a target="_blank" href="https://github.com/newbee-ltd/vue3-admin">欢迎来到</a> -->
     </div>
   </div>
 </template>
