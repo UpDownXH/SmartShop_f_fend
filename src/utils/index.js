@@ -22,5 +22,6 @@ export const pathMap = {
   pay: '支付',
   email: '邮箱验证',
   emailVerify: '邮箱验证成功',
-  address: '收货地址'
+  address: '收货地址',
+  order: '订单'
 }

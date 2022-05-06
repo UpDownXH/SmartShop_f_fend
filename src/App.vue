@@ -67,14 +67,14 @@
               </span>
             </template>
             <el-menu-item-group>
-              <el-menu-item>
+              <el-menu-item index="/order">
                 <el-icon>
                   <home-filled />
                 </el-icon>订单
               </el-menu-item>
               <el-menu-item>
                 <el-icon>
-                  <home-filled />
+                  <home-filled/>
                 </el-icon>支付
               </el-menu-item>
             </el-menu-item-group>

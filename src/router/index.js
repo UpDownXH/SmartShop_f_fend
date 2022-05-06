@@ -12,6 +12,8 @@ import Pay from '@/views/Pay'
 import Email from '@/views/Email'
 import EmailVerify from '@/views/EmailVerify'
 import Address from '@/views/Address'
+import Order from '@/views/Order'
+import Success from '@/views/Success'
  
 
 
@@ -79,6 +81,16 @@ const router = createRouter({
       path: '/address',
       name: 'address',
       component: Address
+    },
+    {
+      path: '/order',
+      name: 'order',
+      component: Order
+    },
+    {
+      path: '/success',
+      name: 'success',
+      component: Success
     },
   ]
 })
