@@ -11,7 +11,8 @@ import Cart from '@/views/Cart'
 import Pay from '@/views/Pay'
 import Email from '@/views/Email'
 import EmailVerify from '@/views/EmailVerify'
-
+import Address from '@/views/Address'
+ 
 
 
 // import AddGood from '@/views/AddGood'
@@ -73,6 +74,11 @@ const router = createRouter({
       path: '/emailVerify',
       name: 'emailVerify',
       component: EmailVerify
+    },
+    {
+      path: '/address',
+      name: 'address',
+      component: Address
     },
   ]
 })

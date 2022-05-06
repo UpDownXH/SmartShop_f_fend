@@ -96,7 +96,7 @@
                   <home-filled />
                 </el-icon>邮箱验证激活
               </el-menu-item>
-              <el-menu-item>
+              <el-menu-item index="/address">
                 <el-icon>
                   <home-filled />
                 </el-icon>收货地址

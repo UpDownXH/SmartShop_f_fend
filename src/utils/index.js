@@ -20,5 +20,7 @@ export const pathMap = {
   detail: '商品详情',
   cart: '购物车',
   pay: '支付',
-  email: '邮箱验证'
+  email: '邮箱验证',
+  emailVerify: '邮箱验证成功',
+  address: '收货地址'
 }
