@@ -53,7 +53,7 @@
               </span>
             </template>
             <el-menu-item-group>
-              <el-menu-item>
+              <el-menu-item index="/cart">
                 <el-icon>
                   <home-filled />
                 </el-icon>购物车商品

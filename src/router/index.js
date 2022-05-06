@@ -7,6 +7,7 @@ import UserEcharts from '@/views/UserEcharts'
 import Demo from '@/views/DemoApp'
 import Search from '@/views/Search'
 import Detail from '@/views/Detail'
+import Cart from '@/views/Cart'
 
 
 // import AddGood from '@/views/AddGood'
@@ -48,7 +49,12 @@ const router = createRouter({
       path: '/detail/:id',
       name: 'detail',
       component: Detail
-    }
+    },
+    {
+      path: '/cart',
+      name: 'cart',
+      component: Cart
+    },
   ]
 })
 

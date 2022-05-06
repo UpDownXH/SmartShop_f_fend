@@ -20,7 +20,7 @@
 
 
         <div class="bottom">
-            <button>添加到购物车</button>
+            <button @click="addCart">添加到购物车</button>
         </div>
     </el-card>
 </template>
@@ -48,8 +48,32 @@ export default {
                 console.log(state.good);
             })
         }
+        //添加购物车请求
+        const addCart = () => {
+            axios.post('/carts/', {
+                count: 1,
+                sku_id: router.currentRoute.value.params.id
+            }, {
+                // 添加cookie认证
+                withCredentials: true,
+            }).then(res => {
+                if (res.status == 200) {
+                    ElMessage({
+                        message: '添加购物车成功',
+                        type: 'success'
+                    })
+
+                } else {
+                    ElMessage({
+                        message: '添加购物车失败',
+                        type: 'info'
+                    })
+                }
+            })
+        }
         return {
             ...toRefs(state),
+            addCart
         }
     }
 }

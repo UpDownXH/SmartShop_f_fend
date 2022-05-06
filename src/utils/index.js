@@ -18,4 +18,5 @@ export const pathMap = {
   category: '所有商品',
   search: '搜索商品',
   detail: '商品详情',
+  cart: '购物车',
 }
