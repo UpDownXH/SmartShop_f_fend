@@ -8,6 +8,10 @@ import Demo from '@/views/DemoApp'
 import Search from '@/views/Search'
 import Detail from '@/views/Detail'
 import Cart from '@/views/Cart'
+import Pay from '@/views/Pay'
+import Email from '@/views/Email'
+import EmailVerify from '@/views/EmailVerify'
+
 
 
 // import AddGood from '@/views/AddGood'
@@ -54,6 +58,21 @@ const router = createRouter({
       path: '/cart',
       name: 'cart',
       component: Cart
+    },
+    {
+      path: '/pay',
+      name: 'pay',
+      component: Pay
+    },
+    {
+      path: '/email',
+      name: 'email',
+      component: Email
+    },
+    {
+      path: '/emailVerify',
+      name: 'emailVerify',
+      component: EmailVerify
     },
   ]
 })

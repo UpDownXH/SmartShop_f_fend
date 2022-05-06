@@ -19,4 +19,6 @@ export const pathMap = {
   search: '搜索商品',
   detail: '商品详情',
   cart: '购物车',
+  pay: '支付',
+  email: '邮箱验证'
 }

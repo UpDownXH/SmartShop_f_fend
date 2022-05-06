@@ -86,15 +86,20 @@
               </span>
             </template>
             <el-menu-item-group>
-              <el-menu-item>
+              <el-menu-item index="/email">
                 <el-icon>
                   <home-filled />
                 </el-icon>邮件验证
               </el-menu-item>
+              <el-menu-item index="/emailVerify">
+                <el-icon>
+                  <home-filled />
+                </el-icon>邮箱验证激活
+              </el-menu-item>
               <el-menu-item>
                 <el-icon>
                   <home-filled />
-                </el-icon>所获地址
+                </el-icon>收货地址
               </el-menu-item>
             </el-menu-item-group>
           </el-sub-menu>

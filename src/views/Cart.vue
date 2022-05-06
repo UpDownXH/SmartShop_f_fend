@@ -2,13 +2,13 @@
     <el-card>
         <template #header>
             <div class="header">
-                占位
+                <el-button type="primary" icon="plus" @click="handleAdd">完全支付</el-button>
             </div>
         </template>
         <el-table ref="multipleTable" :data="cartDate" tooltip-effect="dark" style="width: 100%">
             @selection-change="handleSelectionChange">
-            <el-table-column prop="selected" label="勾选" type="selection">
-            </el-table-column>
+            <!-- <el-table-column prop="selected" label="勾选" type="selection">
+            </el-table-column> -->
             <el-table-column prop="id" label="id" width="100">
             </el-table-column>
             <el-table-column prop="name" label="商品名">
@@ -24,7 +24,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default="scope">
-                    <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.id)">支付</a>
+                    <!-- <a style="cursor: pointer; margin-right: 10px" @click="handleEdit(scope.row.id)">支付</a> -->
                     <el-popconfirm title="确定从购物车中删除吗" confirmButtonText='确定' cancelButtonText='取消'
                         @confirm="handleDeleteOne(scope.row.id)">
                         <template #reference>
@@ -63,10 +63,11 @@ export default {
         // 选中之后的change方法，一旦选项有变化，就会触发该方法。
         const handleSelectionChange = (val) => {
             state.multipleSelection = val
+            console.log(state.multipleSelection);
         }
         //支付按钮
-        const handleEdit = (id) => {
-                
+        const handleAdd = (id) => {
+            console.log(1);
         }
         //删除按钮
         const handleDeleteOne = (id) => {
@@ -93,7 +94,7 @@ export default {
         return {
             ...toRefs(state),
             handleSelectionChange,
-            handleEdit,
+            handleAdd,
             handleDeleteOne
         }
     }
@@ -102,4 +103,7 @@ export default {
 
 
 <style scoped>
+.image {
+    height: 100px;
+}
 </style>
