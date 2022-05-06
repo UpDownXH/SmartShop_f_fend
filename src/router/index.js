@@ -5,6 +5,8 @@ import Login from '@/views/Login'
 import Intruduce from '@/views/Intruduce'
 import UserEcharts from '@/views/UserEcharts'
 import Demo from '@/views/DemoApp'
+import Search from '@/views/Search'
+import Detail from '@/views/Detail'
 
 
 // import AddGood from '@/views/AddGood'
@@ -36,8 +38,19 @@ const router = createRouter({
       path: '/userEcharts',
       name: 'userEcharts',
       component: UserEcharts
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: Search
+    },
+    {
+      path: '/detail/:id',
+      name: 'detail',
+      component: Detail
     }
   ]
 })
+
 
 export default router

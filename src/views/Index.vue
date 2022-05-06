@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from '@/utils/axios'
 import { reactive, toRefs, ref, onMounted, onUnmounted } from 'vue'
 export default {
   name: 'Category',

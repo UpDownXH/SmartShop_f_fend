@@ -71,10 +71,9 @@
 </template>
 
 <script>
-import { reactive, ref, toRefs } from '@vue/reactivity'
+import { onMounted,reactive, ref, toRefs } from 'vue'
 import axios from '@/utils/axios'
 import { localSet, localGet } from '@/utils'
-import { onMounted } from '@vue/runtime-core'
 export default {
     name: 'Login',
     setup() {

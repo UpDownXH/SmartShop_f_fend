@@ -34,12 +34,12 @@
                   <home-filled />
                 </el-icon>商城主页
               </el-menu-item>
-              <el-menu-item>
+              <el-menu-item index="/search">
                 <el-icon>
                   <home-filled />
                 </el-icon>搜索列表
               </el-menu-item>
-              <el-menu-item>
+              <el-menu-item index="/detail">
                 <el-icon>
                   <home-filled />
                 </el-icon>商品详细信息
@@ -152,7 +152,6 @@ export default {
       state.showMenu = !noMenu.includes(to.path)
       document.title = pathMap[to.name]
     })
-
     return {
       ...toRefs(state)
     }

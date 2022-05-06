@@ -1,5 +1,5 @@
 <template>
-    <el-card class="introduce">
+    <el-card>
     </el-card>
 </template>
 

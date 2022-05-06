@@ -15,5 +15,7 @@ export const pathMap = {
   index: '首页',
   intruduce: '系统介绍',
   login: '登录',
-  category: '所有商品' 
+  category: '所有商品',
+  search: '搜索商品',
+  detail: '商品详情',
 }
